@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Collections.Generic;
-
-namespace LogiWiz
+﻿namespace LogiWiz
 {
 
     class LogiWizMain
@@ -31,7 +27,7 @@ namespace LogiWiz
                         string modeDisplay = DisplayCurrMode(CurrMode);
                         string dataSent = DataHelper.ResolveInput(0, CurrMode);
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, " Increasing");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(2, "");
                         LogitechGSDK.LogiLcdMonoSetText(3, "     +            -          Mode      Exit");
                     }
@@ -41,7 +37,7 @@ namespace LogiWiz
                         string modeDisplay = DisplayCurrMode(CurrMode);
                         string dataSent = DataHelper.ResolveInput(1, CurrMode);
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, " Decreasing");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(2, "");
                         LogitechGSDK.LogiLcdMonoSetText(3, "     +            -          Mode      Exit");
                     }
