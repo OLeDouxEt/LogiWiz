@@ -36,10 +36,12 @@ namespace LogiWiz
                 return actionStatus;
             }
             // Need to save the bulb's current setting as only one will change. Others will be passed to the new params sent.
+            // Important parameters are Power State, Temperature settings, and Brightness settings.
             Dictionary<string, string> stateMap = new Dictionary<string, string>()
             {
                 {"temp", "0"},
-                {"dimming", "0"}
+                {"dimming", "0"},
+                {"power", "true"}
             };
             string[] resArray = currState.Split(',');
             foreach (string s in resArray)
@@ -52,6 +54,10 @@ namespace LogiWiz
                 {
                     string[] dimArr = s.Split(":");
                     stateMap["dimming"] = dimArr[1].Trim('}');
+                }else if (s.Contains("state"))
+                {
+                    string[] powerArr = s.Split(":");
+                    stateMap["power"] = powerArr[1];
                 }
             }
             
@@ -88,6 +94,16 @@ namespace LogiWiz
                     break;
                 // Case for turning lights on or off
                 case 2:
+                    // Upper, lower, and modifier need to be passed in here, but will not be used.
+                    string newPowerState = PrepBasicParams(input, stateMap["power"], upper, lower, modifier);
+                    newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"state\": {newPowerState}}}}}";
+                    lightResponse = SendData(newParams);
+                    Console.WriteLine(lightResponse);
+                    if (newParams == "true")
+                    {
+                        actionStatus = "Turning bulb on";
+                    }
+                    actionStatus = "Turning bulb off";
                     break;
             }
             return actionStatus;
@@ -97,35 +113,48 @@ namespace LogiWiz
         // are passed in to set the ranges.
         private static string PrepBasicParams(int input, string currState, int up, int low, int mod)
         {
-            int newState = 0;
-            int intState = int.Parse(currState);
-            switch (input)
+            if (currState == "true" || currState == "false")
             {
-                case 0:
-                    if (intState <= (up - mod))
-                    {
-                        newState = intState + mod;
-                    }
-                    else
-                    {
-                        newState = up;
-                    }
-                    break;
-                case 1:
-                    if (intState >= (low + mod))
-                    {
-                        newState = intState - mod;
-                    }
-                    else
-                    {
-                        newState = low;
-                    }
-                    break;
+                string newPowState = "true";
+                if (input == 0)
+                {
+                    newPowState = "false";
+                }
+                return newPowState;
             }
-            string newStringState = $"{newState}";
-            return newStringState;
+            else
+            {
+                int newState = 0;
+                int intState = int.Parse(currState);
+                switch (input)
+                {
+                    case 0:
+                        if (intState <= (up - mod))
+                        {
+                            newState = intState + mod;
+                        }
+                        else
+                        {
+                            newState = up;
+                        }
+                        break;
+                    case 1:
+                        if (intState >= (low + mod))
+                        {
+                            newState = intState - mod;
+                        }
+                        else
+                        {
+                            newState = low;
+                        }
+                        break;
+                }
+                string newStringState = $"{newState}";
+                return newStringState;
+            }
         }
-
+        // Function to check and see if bulb is online and will accept commands. Helps
+        // prevent unnecessary connection attempts from the "SendData" function to a bulb offline.
         public static bool TestConnection(string endpoint)
         {
             bool ConnectionGood = true;
@@ -151,9 +180,9 @@ namespace LogiWiz
             try
             {
                 int sent = udpClient.Send(data, data.Length);
-                Console.WriteLine(sent);
                 byte[] rawRes = udpClient.Receive(ref Endpoint);
                 string response = System.Text.Encoding.ASCII.GetString(rawRes, 0, rawRes.Length);
+                Console.WriteLine(response);
                 return response;
             }
             catch (Exception e)
