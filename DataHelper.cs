@@ -12,7 +12,6 @@ namespace LogiWiz
 {
     public class DataHelper
     {
-        //public static string IP = "172.30.1.20";
         public static int Port = 38899;
         private static string ConfigFile = @"\Config.txt";
 
@@ -222,7 +221,6 @@ namespace LogiWiz
                 catch(Exception exception)
                 {
                     Console.WriteLine("Unable to create file: " + exception.Message);
-                    //BulbData.Add("0");
                     return BulbData;
                 }
                 
@@ -230,20 +228,30 @@ namespace LogiWiz
             catch (IOException ex)
             {
                 Console.WriteLine("Error reading file: " + ex.Message);
-                //BulbData.Add("0");
                 return BulbData;
             }
         }
 
-        public static string ChangeBulb(int BulbNum)
+        public static string ChangeBulb(int BulbNum, out int CurrBulb)
         {
             List<string> BulbsList = ReadBulbsFile(ConfigFile);
-            if(BulbsList.Count <= 0)
+            string newBulbIP = "";
+            if (BulbsList.Count <= 0)
             {
-                return "Null";
+                CurrBulb = 0;
+                return "172.16.254.1";
             }
-            Console.WriteLine(BulbsList.Count);
-            //Unable to find bulbs. Check Config.txt
+            if(BulbNum < (BulbsList.Count - 1))
+            {
+                CurrBulb = BulbNum + 1;
+                newBulbIP = BulbsList[CurrBulb];
+            }
+            else
+            {
+                CurrBulb = 0;
+                newBulbIP = BulbsList[CurrBulb];
+            }
+            return newBulbIP;
         }
     }
 }
