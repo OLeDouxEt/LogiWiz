@@ -1,15 +1,17 @@
 # :high_brightness: LogiWiz - Logitech G13, G15, and G510 Applet :high_brightness:
-## Control Philips Wiz Bulbs :bulb: with your keboard!
----
+## Control Philips Wiz Bulbs :bulb: with your keyboard!
 This is an applet for the Logitech G13, G15, and G510 keyboards used to control Philips Wiz smart bulbs. This even works with the Logitech Z-10 speakers.
-[![Open Source Friendly](https://img.shields.io/badge/Open%20Source%20Friendly-violet.svg)](https://open-source.org/)
+
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Open Source Friendly](https://img.shields.io/badge/Open%20Source%20Friendly-violet.svg)](https://open-source.org/)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/OLeDouxEt/LogiWiz_G15_LCD_Applet)
+
+
 ## Table of Contents
 
 * [Getting Started](#getting-started)
 * [Features](#features)
 * [Usage](#usage)
-* [Contributing](#contributing)
 * [License](#license)
 
 ## Getting Started
@@ -32,6 +34,5 @@ To get started with this project, follow these steps:
 
 To use this project, simply run the application and follow the instructions in the console.
 ## License
--------
 
 [License Name](https://github.com/your-username/project-name/blob/main/LICENSE)
