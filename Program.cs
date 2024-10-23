@@ -14,6 +14,9 @@ namespace LogiWiz
                 Console.WriteLine("Logitech SDK initialized successfully.");
                 // Default mode is brightness labeled by 0
                 int CurrMode = 0;
+                // Dynamically set by change bulb to determine which bulb 
+                string BulbIP = "";
+                int CurrBulb = 0;
                 while (true)
                 {
                     // sleep is dynamically set if a button is pressed so the display will pause and the user
@@ -27,32 +30,33 @@ namespace LogiWiz
                     {
                         sleep = 1000;
                         string modeDisplay = DisplayCurrMode(CurrMode);
-                        string dataSent = DataHelper.ResolveInput(0, CurrMode);
+                        string dataSent = DataHelper.ResolveInput(0, CurrMode, BulbIP);
                         string inputDisplay = DetermineInputDisplay(CurrMode);
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, $" {dataSent}");
-                        LogitechGSDK.LogiLcdMonoSetText(2, "");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" Controlling Bulb At: ");
+                        LogitechGSDK.LogiLcdMonoSetText(2, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     else if (btn1)
                     {
                         sleep = 1000;
                         string modeDisplay = DisplayCurrMode(CurrMode);
-                        string dataSent = DataHelper.ResolveInput(1, CurrMode);
+                        string dataSent = DataHelper.ResolveInput(1, CurrMode, BulbIP);
                         string inputDisplay = DetermineInputDisplay(CurrMode);
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, $" {dataSent}");
-                        LogitechGSDK.LogiLcdMonoSetText(2, "");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" Controlling Bulb At: ");
+                        LogitechGSDK.LogiLcdMonoSetText(2, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     else if (btn2)
                     {
+                        DataHelper.ChangeBulb(CurrBulb);
                         string modeDisplay = DisplayCurrMode(CurrMode);
                         string inputDisplay = DetermineInputDisplay(CurrMode);
                         sleep = 1000;
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, " ");
-                        LogitechGSDK.LogiLcdMonoSetText(2, "");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" Controlling Bulb At: ");
+                        LogitechGSDK.LogiLcdMonoSetText(2, " ");
                         LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     else if (btn3)
@@ -62,8 +66,8 @@ namespace LogiWiz
                         string modeDisplay = DisplayCurrMode(CurrMode);
                         string inputDisplay = DetermineInputDisplay(CurrMode);
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, " Changing Mode");
-                        LogitechGSDK.LogiLcdMonoSetText(2, "");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" Controlling Bulb At: ");
+                        LogitechGSDK.LogiLcdMonoSetText(2, " Changing Mode");
                         LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     // Normal display loop at rest when no button is pressed
@@ -72,8 +76,8 @@ namespace LogiWiz
                         string modeDisplay = DisplayCurrMode(CurrMode);
                         string inputDisplay = DetermineInputDisplay(CurrMode);
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
-                        LogitechGSDK.LogiLcdMonoSetText(1, "");
-                        LogitechGSDK.LogiLcdMonoSetText(2, "");
+                        LogitechGSDK.LogiLcdMonoSetText(1, $" Controlling Bulb At: ");
+                        LogitechGSDK.LogiLcdMonoSetText(2, " ");
                         LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
 

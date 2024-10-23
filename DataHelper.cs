@@ -1,18 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace LogiWiz
 {
     public class DataHelper
     {
-        public static string IP = "";
+        //public static string IP = "172.30.1.20";
         public static int Port = 38899;
+        private static string ConfigFile = @"\Config.txt";
 
-                public static string ResolveInput(int input, int mode)
+        public static string ResolveInput(int input, int mode, string IP)
         {
             // Variable will be set depending on users input, if the input action was successfully, and will
             // be returned to be displayed to inform the user.
@@ -29,7 +33,7 @@ namespace LogiWiz
 
             // Need to check the bulbs current state before sending a new setting.
             string getCurrState = "{\"method\":\"getPilot\",\"params\":{}}";
-            string currState = SendData(getCurrState);
+            string currState = SendData(getCurrState, IP);
             if (currState == "null") {
                 Console.WriteLine("Unable to communicate with Bulb");
                 actionStatus = "Cannot Communicate With Bulb";
@@ -76,7 +80,7 @@ namespace LogiWiz
                     // Passing in the current state of temp setting fetched from
                     string warmthState = stateMap["temp"];
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"temp\": {warmthState}, \"dimming\": {newDimState}}}}}";
-                    lightResponse = SendData(newParams);
+                    lightResponse = SendData(newParams, IP);
                     Console.WriteLine(lightResponse);
                     actionStatus = $"Setting Brightness To {newDimState}";
                     break;
@@ -88,7 +92,7 @@ namespace LogiWiz
                     string newWarmState = PrepBasicParams(input, stateMap["temp"], upper, lower, modifier);
                     string dimState = stateMap["dimming"];
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"temp\": {newWarmState}, \"dimming\": {dimState}}}}}";
-                    lightResponse = SendData(newParams);
+                    lightResponse = SendData(newParams, IP);
                     Console.WriteLine(lightResponse);
                     actionStatus = $"Setting Temperature To {newWarmState}";
                     break;
@@ -97,7 +101,7 @@ namespace LogiWiz
                     // Upper, lower, and modifier need to be passed in here, but will not be used.
                     string newPowerState = PrepBasicParams(input, stateMap["power"], upper, lower, modifier);
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"state\": {newPowerState}}}}}";
-                    lightResponse = SendData(newParams);
+                    lightResponse = SendData(newParams, IP);
                     Console.WriteLine(lightResponse);
                     if (newParams == "true")
                     {
@@ -167,10 +171,10 @@ namespace LogiWiz
             return ConnectionGood;
         }
 
-        private static string SendData(string reqParams)
+        private static string SendData(string reqParams, string CurrIP)
         {
             UdpClient udpClient = new UdpClient();
-            IPAddress BulbIP = IPAddress.Parse(IP);
+            IPAddress BulbIP = IPAddress.Parse(CurrIP);
             IPEndPoint Endpoint = new IPEndPoint(BulbIP, Port);
             udpClient.Connect(BulbIP, Port);
             udpClient.Client.ReceiveTimeout = 2000;
@@ -191,6 +195,55 @@ namespace LogiWiz
                 Console.WriteLine(response);
                 return "null";
             }
+        }
+
+        private static List<string> ReadBulbsFile(string FileName)
+        {
+            string ExeDir = Directory.GetCurrentDirectory();
+            string fullPath = $"{ExeDir}{FileName}";
+            List<string> BulbData = new List<string>();
+            try
+            {
+                string[] RawBulbData = File.ReadAllLines(fullPath);
+                BulbData = new List<string>(RawBulbData);
+                return BulbData;
+            }
+            catch (FileNotFoundException ex)
+            {
+                // Will raise alert if file is not found and try to create an
+                // empty file and run the function again. Even if the file is empty,
+                // this will be handled later.
+                Console.WriteLine("File not found: " + ex.Message);
+                try
+                {
+                    File.Create(fullPath);
+                    return ReadBulbsFile(fullPath);
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine("Unable to create file: " + exception.Message);
+                    //BulbData.Add("0");
+                    return BulbData;
+                }
+                
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine("Error reading file: " + ex.Message);
+                //BulbData.Add("0");
+                return BulbData;
+            }
+        }
+
+        public static string ChangeBulb(int BulbNum)
+        {
+            List<string> BulbsList = ReadBulbsFile(ConfigFile);
+            if(BulbsList.Count <= 0)
+            {
+                return "Null";
+            }
+            Console.WriteLine(BulbsList.Count);
+            //Unable to find bulbs. Check Config.txt
         }
     }
 }
