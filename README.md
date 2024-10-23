@@ -18,9 +18,12 @@ This is an applet for the Logitech G13, G15, and G510 keyboards used to control 
 
 To get started with this project, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/project-name.git`
-2. Install dependencies: `npm install` or `yarn install`
-3. Start the application: `npm start` or `yarn start`
+1. Have one of these Logitech keyboards: G13, G15, and G510. The Logitech Z-10 Speakers can also be used.
+2. Install either The Logitech Gamepanel Version or the Logitech Gaming Software. (Logitech Gamepanel 3.0.6 or greater)
+3. Install Microsoft Visual Redistributable 2012 (VC++ 11.0) if not already installed
+4. Download the zip file under releases
+5. Unzip and open the folder
+6. Run the ".exe"
 
 ## Features
 
