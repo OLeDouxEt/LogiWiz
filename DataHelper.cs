@@ -12,7 +12,7 @@ namespace LogiWiz
         public static string IP = "";
         public static int Port = 38899;
 
-        public static string ResolveInput(int input, int mode)
+                public static string ResolveInput(int input, int mode)
         {
             // Variable will be set depending on users input, if the input action was successfully, and will
             // be returned to be displayed to inform the user.
@@ -82,9 +82,9 @@ namespace LogiWiz
                     break;
                 // Case for warming or cooling lights
                 case 1:
-                    upper = 6200;
-                    lower = 1000;
-                    modifier = 1000;
+                    upper = 6000;
+                    lower = 2200;
+                    modifier = 500;
                     string newWarmState = PrepBasicParams(input, stateMap["temp"], upper, lower, modifier);
                     string dimState = stateMap["dimming"];
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"temp\": {newWarmState}, \"dimming\": {dimState}}}}}";
@@ -192,10 +192,5 @@ namespace LogiWiz
                 return "null";
             }
         }
-        /*
-        private static string SendAndReceive()
-        {
-
-        }*/
     }
 }

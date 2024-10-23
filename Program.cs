@@ -16,7 +16,6 @@ namespace LogiWiz
                 int CurrMode = 0;
                 while (true)
                 {
-                    bool Shutdown = false;
                     // sleep is dynamically set if a button is pressed so the display will pause and the user
                     // can see the displayed message. 
                     int sleep = 0;
@@ -33,7 +32,7 @@ namespace LogiWiz
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
                         LogitechGSDK.LogiLcdMonoSetText(1, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(2, "");
-                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Mode      Exit");
+                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     else if (btn1)
                     {
@@ -44,9 +43,19 @@ namespace LogiWiz
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
                         LogitechGSDK.LogiLcdMonoSetText(1, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(2, "");
-                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Mode      Exit");
+                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     else if (btn2)
+                    {
+                        string modeDisplay = DisplayCurrMode(CurrMode);
+                        string inputDisplay = DetermineInputDisplay(CurrMode);
+                        sleep = 1000;
+                        LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
+                        LogitechGSDK.LogiLcdMonoSetText(1, " ");
+                        LogitechGSDK.LogiLcdMonoSetText(2, "");
+                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
+                    }
+                    else if (btn3)
                     {
                         sleep = 1000;
                         CurrMode = IncrementMode(CurrMode);
@@ -55,17 +64,7 @@ namespace LogiWiz
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
                         LogitechGSDK.LogiLcdMonoSetText(1, " Changing Mode");
                         LogitechGSDK.LogiLcdMonoSetText(2, "");
-                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Mode      Exit");
-                    }
-                    else if (btn3)
-                    {
-                        sleep = 1000;
-                        Shutdown = true;
-                        string inputDisplay = DetermineInputDisplay(CurrMode);
-                        LogitechGSDK.LogiLcdMonoSetText(0, " LogiWiz Mode: ");
-                        LogitechGSDK.LogiLcdMonoSetText(1, " Shutting Down");
-                        LogitechGSDK.LogiLcdMonoSetText(2, "");
-                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Mode      Exit");
+                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
                     // Normal display loop at rest when no button is pressed
                     else
@@ -75,17 +74,12 @@ namespace LogiWiz
                         LogitechGSDK.LogiLcdMonoSetText(0, $" LogiWiz Mode: {modeDisplay}");
                         LogitechGSDK.LogiLcdMonoSetText(1, "");
                         LogitechGSDK.LogiLcdMonoSetText(2, "");
-                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Mode      Exit");
+                        LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
 
                     // Update the LCD
                     LogitechGSDK.LogiLcdUpdate();
                     Thread.Sleep(sleep);
-                    if (Shutdown)
-                    {
-                        LogitechGSDK.LogiLcdShutdown();
-                        Environment.Exit(0);
-                    }
                 }
             }
             else
