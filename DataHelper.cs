@@ -5,8 +5,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
-using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace LogiWiz
 {
