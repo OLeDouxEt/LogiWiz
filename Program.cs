@@ -21,7 +21,7 @@ namespace LogiWiz
                 {
                     // sleep is dynamically set if a button is pressed so the display will pause and the user
                     // can see the displayed message. 
-                    int sleep = 0;
+                    int sleep = 100;
                     bool btn0 = LogitechGSDK.LogiLcdIsButtonPressed(LogitechGSDK.LOGI_LCD_MONO_BUTTON_0);
                     bool btn1 = LogitechGSDK.LogiLcdIsButtonPressed(LogitechGSDK.LOGI_LCD_MONO_BUTTON_1);
                     bool btn2 = LogitechGSDK.LogiLcdIsButtonPressed(LogitechGSDK.LOGI_LCD_MONO_BUTTON_2);
