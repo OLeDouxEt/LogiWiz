@@ -38,8 +38,21 @@ Once downloaded and unzipped, you can launch "LogiWiz.exe" and a file named "Con
 Populate this file with the local IP addresses of the bulbs by entering each IP on a new line. After this, press the button below "Bulb" on the display to select the bulb you would like to adjust.
 
 ### Example Usage
-
 <!--To use this project, simply run the application and follow the instructions in the console.-->
+Cycle through list of bulbs and select one to adjust
+
+Brightness:
+
+![LogiWiz_Bright](https://github.com/user-attachments/assets/90d963c1-4da9-44c7-a9d4-5b815d631af8)
+
+Power Toggle:
+
+![LogiWiz_On_Off](https://github.com/user-attachments/assets/08fcb0ce-d3e1-4ad8-aeee-f5d327e7bedc)
+
+Temperature:
+
+![LogiWiz_Temp](https://github.com/user-attachments/assets/8810126a-c9ae-4cb8-a311-92e1093225db)
+
 ## License
 
 [GPL-3.0](https://github.com/OLeDouxEt/LogiWiz_G15_LCD_Applet/blob/main/LICENSE)
