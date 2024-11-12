@@ -69,6 +69,7 @@ namespace LogiWiz
             int modifier = 10;
             string newParams;
             string lightResponse;
+
             switch (mode)
             {
                 // Case for dimming or brightening lights
@@ -99,12 +100,24 @@ namespace LogiWiz
                     string newPowerState = PrepBasicParams(input, stateMap["power"], upper, lower, modifier);
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"state\": {newPowerState}}}}}";
                     lightResponse = SendData(newParams, IP);
-                    Console.WriteLine(lightResponse);
-                    if (newParams == "true")
+                    // Reading previous power state and users new desired power state to determine and inform the user
+                    // if the bulb is already on, already off, going on, or turing off.  
+                    if (stateMap["power"] == "true" && newPowerState == "true")
+                    {
+                        actionStatus = "Bulb is already on";
+                    }
+                    else if(stateMap["power"] == "true" && newPowerState == "false")
+                    {
+                        actionStatus = "Turning bulb off";
+                    }
+                    else if (stateMap["power"] == "false" && newPowerState == "false")
+                    {
+                        actionStatus = "Bulb is already off";
+                    }
+                    else
                     {
                         actionStatus = "Turning bulb on";
                     }
-                    actionStatus = "Turning bulb off";
                     break;
             }
             return actionStatus;
@@ -183,7 +196,7 @@ namespace LogiWiz
                 int sent = udpClient.Send(data, data.Length);
                 byte[] rawRes = udpClient.Receive(ref Endpoint);
                 string response = System.Text.Encoding.ASCII.GetString(rawRes, 0, rawRes.Length);
-                Console.WriteLine(response);
+                //Console.WriteLine(response);
                 return response;
             }
             catch (Exception e)
