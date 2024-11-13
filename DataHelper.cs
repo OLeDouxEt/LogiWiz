@@ -183,13 +183,21 @@ namespace LogiWiz
         public static bool TestConnection(string endpoint)
         {
             bool ConnectionGood = true;
-            Ping netTest = new Ping();
-            PingReply pingRes = netTest.Send(endpoint, 1000);
-            if (pingRes.Status.ToString() == "TimedOut")
+            try
+            {
+                Ping netTest = new Ping();
+                PingReply pingRes = netTest.Send(endpoint, 1000);
+                if (pingRes.Status.ToString() == "TimedOut")
+                {
+                    ConnectionGood = false;
+                }
+                return ConnectionGood;
+            }
+            catch
             {
                 ConnectionGood = false;
+                return ConnectionGood;
             }
-            return ConnectionGood;
         }
 
         private static string SendData(string reqParams, string CurrIP)
