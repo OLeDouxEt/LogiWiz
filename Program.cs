@@ -8,8 +8,9 @@ namespace LogiWiz
     {
         static void Main(string[] args)
         {
+            HideWindow.Hide();
             // Initialize the SDK
-            if (LogitechGSDK.LogiLcdInit("LogiWiz", LogitechGSDK.LOGI_LCD_TYPE_MONO | LogitechGSDK.LOGI_LCD_TYPE_COLOR))
+            if (LogitechGSDK.LogiLcdInit("LogiWiz", LogitechGSDK.LOGI_LCD_TYPE_MONO))
             {
                 Console.WriteLine("Logitech SDK initialized successfully.");
                 // Default mode is brightness labeled by 0
@@ -99,7 +100,7 @@ namespace LogiWiz
         public static int IncrementMode(int mode)
         {
             int newMode;
-            if(mode < 2)
+            if(mode < 3)
             {
                 newMode = mode += 1;
             }
@@ -124,6 +125,9 @@ namespace LogiWiz
                 case 2:
                     ModeToDisplay = "On/Off";
                     break;
+                case 3:
+                    ModeToDisplay = "Set Scene";
+                    break;
             }
             return ModeToDisplay;
         }
@@ -142,6 +146,9 @@ namespace LogiWiz
                     break;
                 case 2:
                     InputToDisplay = "   Off         On        ";
+                    break;
+                case 3:
+                    InputToDisplay = " Previous  Next      ";
                     break;
             }
             return InputToDisplay;

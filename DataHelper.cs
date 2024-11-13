@@ -13,6 +13,11 @@ namespace LogiWiz
         public static int Port = 38899;
         private static string ConfigFile = @"\Config.txt";
 
+        // Function to handle user input and call other functions that test connection to the target bulb and fetch it's current state.
+        // This function will deterime what state needs to be changed based on the user input and mode, pass it off to "PrepBasicParams" to prepare
+        // the parameters, call "SendData" to send those parameters to the bulb to change the state, and the return a message depending on the result
+        // to display to the user.
+
         public static string ResolveInput(int input, int mode, string IP)
         {
             // Variable will be set depending on users input, if the input action was successfully, and will
@@ -44,6 +49,8 @@ namespace LogiWiz
                 {"dimming", "0"},
                 {"power", "true"}
             };
+            // Taking returned string response containing the bulb's current and parsing it into
+            // the dictonary that was just created.
             string[] resArray = currState.Split(',');
             foreach (string s in resArray)
             {
@@ -118,6 +125,10 @@ namespace LogiWiz
                     {
                         actionStatus = "Turning bulb on";
                     }
+                    break;
+                // Case for setting scene
+                case 3:
+
                     break;
             }
             return actionStatus;
@@ -196,7 +207,7 @@ namespace LogiWiz
                 int sent = udpClient.Send(data, data.Length);
                 byte[] rawRes = udpClient.Receive(ref Endpoint);
                 string response = System.Text.Encoding.ASCII.GetString(rawRes, 0, rawRes.Length);
-                //Console.WriteLine(response);
+                Console.WriteLine(response);
                 return response;
             }
             catch (Exception e)
@@ -263,6 +274,11 @@ namespace LogiWiz
                 newBulbIP = BulbsList[CurrBulb];
             }
             return newBulbIP;
+        }
+
+        public static string ChangeScene(string SceneName)
+        {
+            return "";
         }
     }
 }
