@@ -42,12 +42,16 @@ namespace LogiWiz
                 return actionStatus;
             }
             // Need to save the bulb's current setting as only one will change. Others will be passed to the new params sent.
-            // Important parameters are Power State, Temperature settings, and Brightness settings.
+            // Important parameters are Power State, Temperature settings, and Brightness settings. These default parameters will
+            // be overwritten by the bulb's current state once it has been fetched and parsed. However, these default settings prevent
+            // "invalid parameter" errors if the current state request lacks one of these settings (temp and dimming). This can occur
+            // when a SceneID is set because the current state does not have a temp setting. 
             Dictionary<string, string> stateMap = new Dictionary<string, string>()
             {
-                {"temp", "0"},
-                {"dimming", "0"},
-                {"power", "true"}
+                {"temp", "3200"},
+                {"dimming", "100"},
+                {"power", "true"},
+                {"sceneId", "0"}
             };
             // Taking returned string response containing the bulb's current and parsing it into
             // the dictonary that was just created.
@@ -66,6 +70,9 @@ namespace LogiWiz
                 {
                     string[] powerArr = s.Split(":");
                     stateMap["power"] = powerArr[1];
+                }else if (s.Contains("sceneId")){
+                    string[] sceneArr = s.Split(":");
+                    stateMap["sceneId"] = sceneArr[1].Trim('}');
                 }
             }
             
@@ -82,9 +89,10 @@ namespace LogiWiz
                 // Case for dimming or brightening lights
                 case 0:
                     string newDimState = PrepBasicParams(input, stateMap["dimming"], upper, lower, modifier);
-                    // Passing in the current state of temp setting fetched from
+                    // Passing in the current state of temp setting fetched from earlier
                     string warmthState = stateMap["temp"];
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"temp\": {warmthState}, \"dimming\": {newDimState}}}}}";
+                    Console.WriteLine(newParams);
                     lightResponse = SendData(newParams, IP);
                     Console.WriteLine(lightResponse);
                     actionStatus = $"Setting Brightness To {newDimState}";
@@ -97,6 +105,7 @@ namespace LogiWiz
                     string newWarmState = PrepBasicParams(input, stateMap["temp"], upper, lower, modifier);
                     string dimState = stateMap["dimming"];
                     newParams = $"{{\"method\": \"setPilot\",\"params\": {{\"temp\": {newWarmState}, \"dimming\": {dimState}}}}}";
+                    Console.WriteLine(newParams);
                     lightResponse = SendData(newParams, IP);
                     Console.WriteLine(lightResponse);
                     actionStatus = $"Setting Temperature To {newWarmState}";
@@ -128,7 +137,8 @@ namespace LogiWiz
                     break;
                 // Case for setting scene
                 case 3:
-
+                    string scene = ChangeScene(input, stateMap, IP);
+                    actionStatus = $"Setting Scene To {scene}";
                     break;
             }
             return actionStatus;
@@ -183,13 +193,21 @@ namespace LogiWiz
         public static bool TestConnection(string endpoint)
         {
             bool ConnectionGood = true;
-            Ping netTest = new Ping();
-            PingReply pingRes = netTest.Send(endpoint, 1000);
-            if (pingRes.Status.ToString() == "TimedOut")
+            try
+            {
+                Ping netTest = new Ping();
+                PingReply pingRes = netTest.Send(endpoint, 1000);
+                if (pingRes.Status.ToString() == "TimedOut")
+                {
+                    ConnectionGood = false;
+                }
+                return ConnectionGood;
+            }
+            catch
             {
                 ConnectionGood = false;
+                return ConnectionGood;
             }
-            return ConnectionGood;
         }
 
         private static string SendData(string reqParams, string CurrIP)
@@ -253,7 +271,9 @@ namespace LogiWiz
                 return BulbData;
             }
         }
-
+        // CurrBulb references the the variable in the Main function of program.cs.
+        // This is done so the current selected bulb index can be updated while still returning
+        // the IP string for the program to display.
         public static string ChangeBulb(int BulbNum, out int CurrBulb)
         {
             List<string> BulbsList = ReadBulbsFile(ConfigFile);
@@ -276,9 +296,73 @@ namespace LogiWiz
             return newBulbIP;
         }
 
-        public static string ChangeScene(string SceneName)
+        // This function is called by "ResolveInput" function if the "Set Scene mode is selected.
+        // It will take the user's input and increment or decrement the current sence using the dictionary defined below.
+        // The current Scene Id does not need to be tracked in memory as the bulb keeps a record of the current scene ID
+        // and this will be retrieved earlier in the "ResovleInput" function by the "SendData" function. 
+        public static string ChangeScene(int input, Dictionary<string, string> currState, string TargetIP)
         {
-            return "";
+            Dictionary<int,string> SceneMap = new Dictionary<int, string>()
+            {
+                {1,"Ocean"},
+                {2,"Romance"},
+                {3,"Sunset"},
+                {4,"Party"},
+                {5,"Fireplace"},
+                {6,"Cozy"},
+                {7,"Forest"},
+                {8,"Pastel Colors"},
+                {9,"Wake up"},
+                {10,"Bedtime"},
+                {11,"Warm White"},
+                {12,"Daylight"},
+                {13,"Cool white"},
+                {14,"Night light"},
+                {15,"Focus"},
+                {16,"Relax"},
+                {17,"True colors"},
+                {18,"TV time"},
+                {19,"Plantgrowth"},
+                {20,"Spring"},
+                {21,"Summer"},
+                {22,"Fall"},
+                {23,"Deepdive"},
+                {24,"Jungle"},
+                {25,"Mojito"},
+                {26,"Club"},
+                {27,"Christmas"},
+                {28,"Halloween"},
+                {29,"Candlelight"},
+                {30,"Golden white"},
+                {31,"Pulse"},
+                {32,"Steampunk"}
+            };
+            string currStrScene = currState["sceneId"];
+            int currIntScene = int.Parse(currStrScene);
+            string newScene;
+            int newSceneID;
+            if(currIntScene == 1 && input == 0)
+            {
+                newScene = SceneMap[32];
+                newSceneID = 32;
+            }else if(currIntScene < 32 && input == 1)
+            {
+                newSceneID = currIntScene += 1;
+                newScene = SceneMap[newSceneID];
+            }
+            else if(currIntScene <= 32 && input == 0)
+            {
+                newSceneID = currIntScene -= 1;
+                newScene = SceneMap[newSceneID];
+            }
+            else
+            {
+                newScene = SceneMap[1];
+                newSceneID = 1;
+            }
+            string newIDParams = $"{{\"method\": \"setPilot\",\"params\": {{\"sceneId\": {newSceneID}}}}}";
+            SendData(newIDParams, TargetIP);
+            return newScene;
         }
     }
 }

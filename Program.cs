@@ -27,7 +27,7 @@ namespace LogiWiz
                     bool btn1 = LogitechGSDK.LogiLcdIsButtonPressed(LogitechGSDK.LOGI_LCD_MONO_BUTTON_1);
                     bool btn2 = LogitechGSDK.LogiLcdIsButtonPressed(LogitechGSDK.LOGI_LCD_MONO_BUTTON_2);
                     bool btn3 = LogitechGSDK.LogiLcdIsButtonPressed(LogitechGSDK.LOGI_LCD_MONO_BUTTON_3);
-                    // Condition to change bulb brightness
+                    // 
                     if (btn0)
                     {
                         sleep = 1000;
@@ -39,7 +39,7 @@ namespace LogiWiz
                         LogitechGSDK.LogiLcdMonoSetText(2, $" {dataSent}");
                         LogitechGSDK.LogiLcdMonoSetText(3, $"{inputDisplay}Bulb      Mode");
                     }
-                    // Condition to change bulb temperature
+                    // 
                     else if (btn1)
                     {
                         sleep = 1000;
