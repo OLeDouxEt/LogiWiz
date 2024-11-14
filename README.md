@@ -31,6 +31,7 @@ To get started with this project, follow these steps:
 * Adjust bulb brightness
 * Lower or raise bulb temperature
 * Turn blubs on and off
+* Chnage to one of the pre-configured scenes
 * Cycle through list of bulbs and select one to adjust
 
 ## Usage
@@ -52,6 +53,11 @@ Power Toggle:
 Temperature:
 
 ![LogiWiz_Temp](https://github.com/user-attachments/assets/8810126a-c9ae-4cb8-a311-92e1093225db)
+
+Scenes:
+
+![LogiWiz_Scene](https://github.com/user-attachments/assets/e1788db3-a571-499e-936c-1bb8a0ef649a)
+
 
 ## License
 
