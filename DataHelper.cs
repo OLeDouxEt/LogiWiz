@@ -336,21 +336,27 @@ namespace LogiWiz
                 {30,"Golden white"},
                 {31,"Pulse"},
                 {32,"Steampunk"}
+                {33,"Diwali"},
+                {34,"White"},
+                {35,"Alarm"}
             };
             string currStrScene = currState["sceneId"];
             int currIntScene = int.Parse(currStrScene);
             string newScene;
             int newSceneID;
-            if(currIntScene == 1 && input == 0)
+            // Need to add condition for 0 if coming from a state where a sceneId is not set
+            // and the default is given. (Ex. changing from adjusting temp mode to setting a scene, the
+            // bulb has no sceneId set. 0 is given as a default to not conflict with other modes.)
+            if((currIntScene == 1 || currIntScene == 0) && input == 0)
             {
-                newScene = SceneMap[32];
-                newSceneID = 32;
-            }else if(currIntScene < 32 && input == 1)
+                newScene = SceneMap[35];
+                newSceneID = 35;
+            }else if(currIntScene < 35 && input == 1)
             {
                 newSceneID = currIntScene += 1;
                 newScene = SceneMap[newSceneID];
             }
-            else if(currIntScene <= 32 && input == 0)
+            else if(currIntScene <= 35 && input == 0)
             {
                 newSceneID = currIntScene -= 1;
                 newScene = SceneMap[newSceneID];
