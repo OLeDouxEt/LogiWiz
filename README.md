@@ -46,17 +46,60 @@ Brightness:
 
 ![LogiWiz_Bright](https://github.com/user-attachments/assets/90d963c1-4da9-44c7-a9d4-5b815d631af8)
 
+- Use the plus and minus buttons to adjust brightness level by 10 unints between 10 and 100.
+
 Power Toggle:
 
 ![LogiWiz_On_Off](https://github.com/user-attachments/assets/08fcb0ce-d3e1-4ad8-aeee-f5d327e7bedc)
+
+- On and off buttons allow you to change the bulb's power state.
 
 Temperature:
 
 ![LogiWiz_Temp](https://github.com/user-attachments/assets/8810126a-c9ae-4cb8-a311-92e1093225db)
 
+- Make a bulb's light warmer or cooler by increments of 500 between 2200k and 6000k.
+
 Scenes:
 
 ![LogiWiz_Scene](https://github.com/user-attachments/assets/e1788db3-a571-499e-936c-1bb8a0ef649a)
+
+- Rotate between the pre-defined, static and dynamic, color scenes of the bulb as follows:
+  * 1: "Ocean"
+  * 2: "Romance"
+  * 3: "Sunset"
+  * 4: "Party"
+  * 5: "Fireplace"
+  * 6: "Cozy"
+  * 7: "Forest"
+  * 8: "Pastel Colors"
+  * 9: "Wake up"
+  * 10: "Bedtime"
+  * 11: "Warm White"
+  * 12: "Daylight"
+  * 13: "Cool white"
+  * 14: "Night light"
+  * 15: "Focus"
+  * 16: "Relax"
+  * 17: "True colors"
+  * 18: "TV time"
+  * 19: "Plantgrowth"
+  * 20: "Spring"
+  * 21: "Summer"
+  * 22: "Fall"
+  * 23: "Deepdive"
+  * 24: "Jungle"
+  * 25: "Mojito"
+  * 26: "Club"
+  * 27: "Christmas"
+  * 28: "Halloween"
+  * 29: "Candlelight"
+  * 30: "Golden white"
+  * 31: "Pulse"
+  * 32: "Steampunk"
+  * 33: "Diwali"
+  * 34: "White"
+  * 35: "Alarm"
 
 
 ## License
